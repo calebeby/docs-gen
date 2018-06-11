@@ -205,7 +205,7 @@ Object {
 }
 `;
 
-exports[`union 1`] = `
+exports[`union should parse a basic union 1`] = `
 Object {
   "subType": Object {
     "subTypes": Array [
@@ -216,6 +216,25 @@ Object {
       Object {
         "type": 0,
         "value": "\\"hello\\"",
+      },
+    ],
+    "type": 6,
+  },
+  "type": 5,
+}
+`;
+
+exports[`union should parse a union with a boolean 1`] = `
+Object {
+  "subType": Object {
+    "subTypes": Array [
+      Object {
+        "type": 1,
+        "value": "number",
+      },
+      Object {
+        "type": 1,
+        "value": "boolean",
       },
     ],
     "type": 6,

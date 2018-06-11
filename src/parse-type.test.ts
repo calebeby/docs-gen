@@ -74,8 +74,13 @@ describe('object', () => {
 test('array', () => {
   expect(parseType(T(`number[]`))).toMatchSnapshot()
 })
-test('union', () => {
-  expect(parseType(T(`(number|'hello')[]`))).toMatchSnapshot()
+describe('union', () => {
+  it('should parse a basic union', () => {
+    expect(parseType(T(`(number|'hello')[]`))).toMatchSnapshot()
+  })
+  it('should parse a union with a boolean', () => {
+    expect(parseType(T(`(number|boolean)[]`))).toMatchSnapshot()
+  })
 })
 describe('intersection', () => {
   test('object', () => {
