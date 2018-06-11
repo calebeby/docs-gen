@@ -1,5 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`any 1`] = `
+Object {
+  "type": 1,
+  "value": "any",
+}
+`;
+
 exports[`array 1`] = `
 Object {
   "subType": Object {

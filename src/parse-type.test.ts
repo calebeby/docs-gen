@@ -19,6 +19,9 @@ test('number literal', () => {
 test('number', () => {
   expect(parseType(T('number'))).toMatchSnapshot()
 })
+test('any', () => {
+  expect(parseType(T('any'))).toMatchSnapshot()
+})
 test('boolean literal', () => {
   expect(parseType(T('true'))).toMatchSnapshot()
 })

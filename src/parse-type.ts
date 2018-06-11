@@ -133,5 +133,8 @@ export const parseType = (t: Type): ParsedType => {
       subTypes: subTypes.map(parseType),
     }
   }
+  if (t.getText() === 'any') {
+    return { type: NodeTypes.Base, value: 'any' }
+  }
   throw new Error(`Unrecognized type: ${t.getText()}`)
 }
