@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`findRoutes 1`] = `
+Array [
+  "get<Foo>('/blah')",
+  "get<Blah>('/asdflkasdf')",
+  "put<Blah>('/asdflkasdf')",
+]
+`;
+
+exports[`parseRoute get 1`] = `"any"`;
+
+exports[`parseRoute get 2`] = `"get"`;
+
+exports[`parseRoute get 3`] = `"/blah/{asdf}"`;
+
+exports[`parseRoute put 1`] = `"any"`;
+
+exports[`parseRoute put 2`] = `"{ name: string; }"`;
+
+exports[`parseRoute put 3`] = `"put"`;
+
+exports[`parseRoute put 4`] = `"/blah/{asdf}"`;

@@ -1,0 +1,218 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`array 1`] = `
+Object {
+  "subType": Object {
+    "type": 1,
+    "value": "number",
+  },
+  "type": 5,
+}
+`;
+
+exports[`boolean 1`] = `
+Object {
+  "type": 1,
+  "value": "boolean",
+}
+`;
+
+exports[`boolean literal 1`] = `
+Object {
+  "type": 0,
+  "value": "true",
+}
+`;
+
+exports[`intersection object 1`] = `
+Object {
+  "keys": Array [
+    Object {
+      "key": "foo",
+      "optional": false,
+      "value": Object {
+        "type": 1,
+        "value": "string",
+      },
+    },
+    Object {
+      "comment": "/* hello */",
+      "key": "bar",
+      "optional": true,
+      "value": Object {
+        "type": 1,
+        "value": "number",
+      },
+    },
+  ],
+  "numberIndex": Object {
+    "type": 1,
+    "value": "number",
+  },
+  "type": 4,
+}
+`;
+
+exports[`intersection primitive 1`] = `
+Object {
+  "subTypes": Array [
+    Object {
+      "type": 1,
+      "value": "number",
+    },
+    Object {
+      "type": 0,
+      "value": "\\"hello\\"",
+    },
+  ],
+  "type": 7,
+}
+`;
+
+exports[`number 1`] = `
+Object {
+  "type": 1,
+  "value": "number",
+}
+`;
+
+exports[`number literal 1`] = `
+Object {
+  "type": 0,
+  "value": "4",
+}
+`;
+
+exports[`object should parse correctly with comments 1`] = `
+Object {
+  "keys": Array [
+    Object {
+      "key": "foo",
+      "optional": false,
+      "value": Object {
+        "type": 1,
+        "value": "number",
+      },
+    },
+    Object {
+      "comment": "/* bar is
+        a really
+        long comment */",
+      "key": "bar",
+      "optional": false,
+      "value": Object {
+        "type": 0,
+        "value": "10",
+      },
+    },
+    Object {
+      "comment": "/* comment here */",
+      "key": "baz",
+      "optional": true,
+      "value": Object {
+        "type": 0,
+        "value": "\\"hello\\"",
+      },
+    },
+    Object {
+      "comment": "// UTC",
+      "key": "date",
+      "optional": false,
+      "value": Object {
+        "type": 1,
+        "value": "string",
+      },
+    },
+  ],
+  "type": 4,
+}
+`;
+
+exports[`object should parse number index type 1`] = `
+Object {
+  "keys": Array [
+    Object {
+      "key": "foo",
+      "optional": false,
+      "value": Object {
+        "type": 1,
+        "value": "number",
+      },
+    },
+    Object {
+      "key": "bar",
+      "optional": false,
+      "value": Object {
+        "type": 1,
+        "value": "string",
+      },
+    },
+  ],
+  "numberIndex": Object {
+    "type": 1,
+    "value": "number",
+  },
+  "type": 4,
+}
+`;
+
+exports[`object should parse string index type 1`] = `
+Object {
+  "keys": Array [
+    Object {
+      "key": "foo",
+      "optional": false,
+      "value": Object {
+        "type": 1,
+        "value": "number",
+      },
+    },
+    Object {
+      "key": "bar",
+      "optional": false,
+      "value": Object {
+        "type": 1,
+        "value": "string",
+      },
+    },
+  ],
+  "stringIndex": Object {
+    "type": 1,
+    "value": "number",
+  },
+  "type": 4,
+}
+`;
+
+exports[`string 1`] = `
+Object {
+  "type": 1,
+  "value": "string",
+}
+`;
+
+exports[`string literal 1`] = `
+Object {
+  "type": 0,
+  "value": "\\"hello\\"",
+}
+`;
+
+exports[`union 1`] = `
+Object {
+  "subType": Object {
+    "subTypes": Array [
+      Object {
+        "type": 1,
+        "value": "number",
+      },
+      Object {
+        "type": 0,
+        "value": "\\"hello\\"",
+      },
+    ],
+    "type": 6,
+  },
+  "type": 5,
+}
+`;
