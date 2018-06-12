@@ -53,5 +53,6 @@ export const run = (input: string) => {
     .map(parseRoute)
     .reduce(mergeUrls, [])
     .map(printRouteCollection)
+    .sort()
     .join('\n')
 }

@@ -1,31 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`type 1`] = `
-"# \`/events\`
-
-## \`GET\`
-
-### Response
-
-\`\`\`ts
-type Data = {
-  name: string
-  district?: string
-  week?: number
-  // UTC date
-  startDate: string
-  // UTC date
-  endDate: string
-  // Only if user is logged in
-  starred?: boolean
-  location: {
-    lat: number
-    lon: number
-  }
-}[]
-\`\`\`
-
-# \`/event/{eventKey}/info\`
+"# \`/event/{eventKey}/info\`
 
 ## \`GET\`
 
@@ -52,6 +28,30 @@ type Data = {
   // Only if user is logged in
   starred?: boolean
 }
+\`\`\`
+
+# \`/events\`
+
+## \`GET\`
+
+### Response
+
+\`\`\`ts
+type Data = {
+  name: string
+  district?: string
+  week?: number
+  // UTC date
+  startDate: string
+  // UTC date
+  endDate: string
+  // Only if user is logged in
+  starred?: boolean
+  location: {
+    lat: number
+    lon: number
+  }
+}[]
 \`\`\`
 "
 `;
