@@ -56,16 +56,16 @@ interface ParsedFalse extends ParsedLiteral {
 
 const isTypeLiteral = (t: ParsedType): t is ParsedLiteral =>
   t.type === NodeTypes.Literal
-const isTypeTrue = (t: ParsedType): t is ParsedTrue =>
+const isTrueType = (t: ParsedType): t is ParsedTrue =>
   isTypeLiteral(t) && t.value === 'true'
-const isTypeFalse = (t: ParsedType): t is ParsedFalse =>
+const isFalseType = (t: ParsedType): t is ParsedFalse =>
   isTypeLiteral(t) && t.value === 'false'
 
 const parseUnion = (t: Type) => {
   const types = t.getUnionTypes().map(parseType)
-  if (types.find(isTypeTrue) && types.find(isTypeFalse)) {
+  if (types.find(isTrueType) && types.find(isFalseType)) {
     return types
-      .filter(type => !isTypeTrue(type) && !isTypeFalse(type))
+      .filter(type => !isTrueType(type) && !isFalseType(type))
       .concat({ type: NodeTypes.Base, value: 'boolean' })
   }
   return types
