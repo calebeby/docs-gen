@@ -8,8 +8,13 @@ import {
   TypeNode,
 } from 'ts-simple-ast'
 
-type HTTPMethod = 'get' | 'put' | 'post' | 'delete'
-const acceptedMethods = ['get', 'put', 'post', 'delete']
+type HTTPMethod = 'getRequest' | 'putRequest' | 'postRequest' | 'deleteRequest'
+const acceptedMethods = [
+  'getRequest',
+  'putRequest',
+  'postRequest',
+  'deleteRequest',
+]
 
 export interface Route {
   url: string
