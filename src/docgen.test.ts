@@ -1,7 +1,7 @@
 import { SyntaxKind } from 'ts-simple-ast'
 import { parseSource } from './test-helper'
 
-import { findRoutes, parseRoute, Put } from './docgen'
+import { findRoutes, parseRoute } from './docgen'
 
 test('findRoutes', () => {
   const src = `
@@ -30,7 +30,7 @@ test('parseRoute put', () => {
   const call = parseSource(src).getDescendantsOfKind(
     SyntaxKind.CallExpression,
   )[0]
-  const parsedRoute = parseRoute(call) as Put
+  const parsedRoute = parseRoute(call)
   expect(parsedRoute.responseType.getText()).toMatchSnapshot()
   expect(parsedRoute.requestType.getText()).toMatchSnapshot()
   expect(parsedRoute.method).toMatchSnapshot()

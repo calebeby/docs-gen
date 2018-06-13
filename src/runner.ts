@@ -1,5 +1,5 @@
 import Project, { Type } from 'ts-simple-ast'
-import { findRoutes, parseRoute, Route, Get, Put } from './docgen'
+import { findRoutes, parseRoute, Route } from './docgen'
 import { format } from './format'
 import { printType } from './print-type'
 import { parseType } from './parse-type'
@@ -19,7 +19,7 @@ const printRoute = (route: Route) => {
   let text = `
 ## \`${route.method.toUpperCase()}\`
 `
-  if ('requestType' in route) {
+  if (route.requestType) {
     text += `
 ### Request
 ${printFormatType(route.requestType)}\n`
@@ -51,7 +51,8 @@ export const run = (input: string) => {
   const file = project.createSourceFile('file.ts', input)
   return findRoutes(file)
     .map(parseRoute)
-    .reduce(mergeUrls, [])
+    .filter((r): r is Route => r !== undefined)
+    .reduce<RouteCollection[]>(mergeUrls, [])
     .map(printRouteCollection)
     .sort()
     .join('\n')

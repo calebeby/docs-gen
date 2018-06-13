@@ -1,9 +1,24 @@
-import { SourceFile, SyntaxKind, CallExpression, Type } from 'ts-simple-ast'
+import {
+  SourceFile,
+  SyntaxKind,
+  CallExpression,
+  Type,
+  ts,
+  Node,
+  TypeNode,
+} from 'ts-simple-ast'
 
-type HTTPMethods = 'get' | 'put'
-const acceptedMethods = ['get', 'put']
+type HTTPMethod = 'get' | 'put' | 'post' | 'delete'
+const acceptedMethods = ['get', 'put', 'post', 'delete']
 
-export const isHttpMethod = (call: CallExpression) =>
+export interface Route {
+  url: string
+  requestType?: Type
+  responseType?: Type
+  method: HTTPMethod
+}
+
+export const isCallHttpMethod = (call: CallExpression) =>
   call.getTypeArguments().length === 1 &&
   call
     .getChildrenOfKind(SyntaxKind.Identifier)
@@ -21,7 +36,7 @@ export const findRoutes = (file: SourceFile) =>
         .forEach(arrowFunc => {
           const call = arrowFunc
             .getDescendantsOfKind(SyntaxKind.CallExpression)
-            .find(isHttpMethod)
+            .find(isCallHttpMethod)
           if (call !== undefined) {
             routes.push(call)
           }
@@ -29,39 +44,29 @@ export const findRoutes = (file: SourceFile) =>
       return routes
     }, [])
 
-interface HTTPMethod {
-  url: string
-  responseType: Type
-  method: HTTPMethods
-}
+const isHttpMethod = (s: string): s is HTTPMethod => acceptedMethods.includes(s)
 
-export interface Get extends HTTPMethod {
-  method: 'get'
-}
-
-export interface Put extends HTTPMethod {
-  requestType: Type
-  method: 'put'
-}
-
-export type Route = Get | Put
-
-export const parseRoute = (call: CallExpression): Route => {
+export const parseRoute = (call: CallExpression): Route | undefined => {
   const method = call
     .getChildrenOfKind(SyntaxKind.Identifier)
-    .find(id => acceptedMethods.includes(id.getText()))
-    .print()
-  const responseType = call.getTypeArguments()[0].getType()
+    .map(id => id.getText())
+    .find(id => acceptedMethods.includes(id))
+  if (method === undefined || !isHttpMethod(method)) {
+    return
+  }
+  const typeArgs = call.getTypeArguments() as (
+    | TypeNode<ts.TypeNode>
+    | undefined)[]
+  const args = call.getArguments() as (Node<ts.Node> | undefined)[]
+  const responseArg = typeArgs[0]
+  const requestArg = args[1]
+  const responseType = responseArg && responseArg.getType()
+  const requestType = requestArg && requestArg.getType()
   const url = call
     .getArguments()[0]
     .getText()
     .replace(/`/g, '')
     .replace(/'/g, '')
     .replace(/\${/g, '{')
-  if (method === 'get') {
-    return { responseType, method, url }
-  } else if (method === 'put') {
-    const requestType = call.getArguments()[1].getType()
-    return { responseType, requestType, method, url }
-  }
+  return { responseType, requestType, method, url }
 }
