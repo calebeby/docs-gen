@@ -22,6 +22,12 @@ test('number', () => {
 test('any', () => {
   expect(parseType(T('any'))).toMatchSnapshot()
 })
+test('null', () => {
+  expect(parseType(T('null'))).toMatchSnapshot()
+})
+test('undefined', () => {
+  expect(parseType(T('undefined'))).toMatchSnapshot()
+})
 test('boolean literal', () => {
   expect(parseType(T('true'))).toMatchSnapshot()
 })

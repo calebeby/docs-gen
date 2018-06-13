@@ -77,7 +77,7 @@ interface ParsedLiteral {
 }
 interface ParsedBaseType {
   type: NodeTypes.Base
-  value: 'string' | 'number' | 'boolean' | 'any'
+  value: 'string' | 'number' | 'boolean' | 'any' | 'null' | 'undefined'
 }
 interface ParsedArray {
   type: NodeTypes.Array
@@ -155,6 +155,12 @@ export const parseType = (t: Type): ParsedType => {
       type: NodeTypes.Intersection,
       subTypes: subTypes.map(parseType),
     }
+  }
+  if (t.isUndefinedType()) {
+    return { type: NodeTypes.Base, value: 'undefined' }
+  }
+  if (t.isNullType()) {
+    return { type: NodeTypes.Base, value: 'null' }
   }
   if (t.getText() === 'any') {
     return { type: NodeTypes.Base, value: 'any' }

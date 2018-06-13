@@ -76,6 +76,13 @@ Object {
 }
 `;
 
+exports[`null 1`] = `
+Object {
+  "type": 1,
+  "value": "null",
+}
+`;
+
 exports[`number 1`] = `
 Object {
   "type": 1,
@@ -202,6 +209,13 @@ exports[`string literal 1`] = `
 Object {
   "type": 0,
   "value": "\\"hello\\"",
+}
+`;
+
+exports[`undefined 1`] = `
+Object {
+  "type": 1,
+  "value": "undefined",
 }
 `;
 
