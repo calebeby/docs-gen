@@ -5,8 +5,15 @@ Array [
   "get<Foo>('/blah')",
   "get<Blah>('/asdflkasdf')",
   "put<Blah>('/asdflkasdf')",
+  "putRequest<Blah>('/something')",
 ]
 `;
+
+exports[`parseRoute deleteRequest 1`] = `"boolean"`;
+
+exports[`parseRoute deleteRequest 2`] = `"delete"`;
+
+exports[`parseRoute deleteRequest 3`] = `"/blah/{asdf}"`;
 
 exports[`parseRoute get 1`] = `"any"`;
 

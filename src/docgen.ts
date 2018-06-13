@@ -8,8 +8,12 @@ import {
   TypeNode,
 } from 'ts-simple-ast'
 
-type HTTPMethod = 'getRequest' | 'putRequest' | 'postRequest' | 'deleteRequest'
+type HTTPMethod = 'get' | 'put' | 'post' | 'delete'
 const acceptedMethods = [
+  'get',
+  'put',
+  'post',
+  'delete',
   'getRequest',
   'putRequest',
   'postRequest',
@@ -54,7 +58,7 @@ const isHttpMethod = (s: string): s is HTTPMethod => acceptedMethods.includes(s)
 export const parseRoute = (call: CallExpression): Route | undefined => {
   const method = call
     .getChildrenOfKind(SyntaxKind.Identifier)
-    .map(id => id.getText())
+    .map(id => id.getText().replace('Request', ''))
     .find(id => acceptedMethods.includes(id))
   if (method === undefined || !isHttpMethod(method)) {
     return
