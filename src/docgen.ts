@@ -25,6 +25,7 @@ export interface Route {
   requestType?: Type
   responseType?: Type
   method: HTTPMethod
+  comment?: string
 }
 
 export const isCallHttpMethod = (call: CallExpression) =>
@@ -77,5 +78,30 @@ export const parseRoute = (call: CallExpression): Route | undefined => {
     .replace(/`/g, '')
     .replace(/'/g, '')
     .replace(/\${/g, '{')
-  return { responseType, requestType, method, url }
+  let comment = ''
+  const parentExport = call.getFirstAncestorByKind(SyntaxKind.VariableStatement)
+  if (parentExport) {
+    const leadingComments = parentExport.getLeadingCommentRanges()
+    comment = leadingComments
+      .map(c =>
+        c
+          .getText()
+          .replace(/^\/\//, '')
+          .replace(/^\/\*\*/, '')
+          .replace(/^\/\*/, '')
+          .replace(/\*\/$/, '')
+          .trim(),
+      )
+      .join('\n')
+      .split('\n')
+      .map(s =>
+        s
+          .trim()
+          .replace(/^\*/, '')
+          .trim(),
+      )
+      .filter(s => s !== '')
+      .join('\n')
+  }
+  return { responseType, requestType, method, url, comment }
 }

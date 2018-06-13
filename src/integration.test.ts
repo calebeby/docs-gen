@@ -18,6 +18,11 @@ interface BasicEventInfo {
   }
 }
 
+// comment
+/**
+ * this is a comment on getEvents
+ */
+// another comment
 export const getEvents = () => get<BasicEventInfo[]>('/events')
 
 interface EventInfo extends BasicEventInfo {

@@ -19,12 +19,15 @@ const printRoute = (route: Route) => {
   let text = `
 ## \`${route.method.toUpperCase()}\`
 `
+  if (route.comment) {
+    text += '\n' + route.comment + '\n'
+  }
   if (route.requestType) {
     text += `
 ### Request
 ${printFormatType(route.requestType)}\n`
   }
-  if ('responseType' in route) {
+  if (route.responseType) {
     text += `
 ### Response
 ${printFormatType(route.responseType)}`

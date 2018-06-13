@@ -15,8 +15,21 @@ test('findRoutes', () => {
   expect(findRoutes(parseSource(src)).map(d => d.print())).toMatchSnapshot()
 })
 
+test('parseRoute with comment', () => {
+  const src = `
+    /**
+     * this is a leading comment
+     */
+    // another leading comment
+    export const asdf3 = () => putRequest<Blah>('/something')
+    `
+  expect(parseRoute(findRoutes(parseSource(src))[0]).comment).toMatchSnapshot()
+})
+
 test('parseRoute get', () => {
-  const src = 'get<Foo>(`/blah/${asdf}`)'
+  const src = `
+get<Foo>(\`/blah/\${asdf}\`)
+`
   const call = parseSource(src).getDescendantsOfKind(
     SyntaxKind.CallExpression,
   )[0]

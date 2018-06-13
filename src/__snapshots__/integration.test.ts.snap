@@ -34,6 +34,10 @@ type Data = {
 
 ## \`GET\`
 
+comment
+this is a comment on getEvents
+another comment
+
 ### Response
 
 \`\`\`ts

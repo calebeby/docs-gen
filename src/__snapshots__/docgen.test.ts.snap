@@ -28,3 +28,8 @@ exports[`parseRoute put 2`] = `"{ name: string; }"`;
 exports[`parseRoute put 3`] = `"put"`;
 
 exports[`parseRoute put 4`] = `"/blah/{asdf}"`;
+
+exports[`parseRoute with comment 1`] = `
+"this is a leading comment
+another leading comment"
+`;
