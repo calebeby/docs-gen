@@ -34,10 +34,10 @@ const main = async () => {
     let out
     try {
       out = run(src)
+      await writeFile(path.join(docsFolder, 'docs.md'), out)
     } catch (e) {
       console.error(e)
     }
-    await writeFile(path.join(docsFolder, 'docs.md'), out)
     console.log('done')
   }
   processFile()
