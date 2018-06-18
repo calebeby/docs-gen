@@ -1,12 +1,12 @@
 import { Type, SymbolFlags, SyntaxKind, Symbol, ts } from 'ts-simple-ast'
 
 export enum NodeTypes {
-  Literal,
-  Base,
+  Literal = 0,
+  Base = 1,
   Object = 4,
-  Array,
-  Union,
-  Intersection,
+  Array = 5,
+  Union = 6,
+  Intersection = 7,
 }
 
 const parseKeyVal = (prop: Symbol) => {
@@ -148,8 +148,6 @@ export const parseType = (t: Type): ParsedType => {
       subTypes: subTypes.map(parseType),
     }
   }
-  const def = t.getDefault()
-  if (def !== undefined) return parseType(def)
   if (isObject(t)) return parseObject(t)
   throw new Error(`Unrecognized type: ${t.getText()}`)
 }
