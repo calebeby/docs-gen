@@ -1,4 +1,4 @@
-import { Type, SymbolFlags, SyntaxKind, Symbol } from 'ts-simple-ast'
+import { Type, SymbolFlags, SyntaxKind, Symbol, ts } from 'ts-simple-ast'
 
 export enum NodeTypes {
   Literal,
@@ -103,7 +103,6 @@ interface ParsedIntersection {
   type: NodeTypes.Intersection
   subTypes: ParsedType[]
 }
-
 export type ParsedType =
   | ParsedLiteral
   | ParsedBaseType
@@ -112,37 +111,30 @@ export type ParsedType =
   | ParsedObject
   | ParsedIntersection
 
+const isObject = (t: Type<ts.Type>): boolean => {
+  if (t.isArrayType()) return false
+  if (t.isObjectType()) return true
+  const def = t.getDefault()
+  return def ? isObject(def) : false
+}
+
 export const parseType = (t: Type): ParsedType => {
-  if (t.isLiteralType()) {
-    return { type: NodeTypes.Literal, value: t.getText() }
-  }
-  if (t.isStringType()) {
-    return { type: NodeTypes.Base, value: 'string' }
-  }
-  if (t.isNumberType()) {
-    return { type: NodeTypes.Base, value: 'number' }
-  }
-  if (t.isBooleanType()) {
-    return { type: NodeTypes.Base, value: 'boolean' }
-  }
-  if (t.isArrayType()) {
-    return { type: NodeTypes.Array, subType: parseArray(t) }
-  }
-  if (t.isUnionType()) {
-    return { type: NodeTypes.Union, subTypes: parseUnion(t) }
-  }
-  if (t.isObjectType()) {
-    return parseObject(t)
-  }
+  if (t.isLiteralType()) return { type: NodeTypes.Literal, value: t.getText() }
+  if (t.isStringType()) return { type: NodeTypes.Base, value: 'string' }
+  if (t.isNumberType()) return { type: NodeTypes.Base, value: 'number' }
+  if (t.isBooleanType()) return { type: NodeTypes.Base, value: 'boolean' }
+  if (t.isArrayType()) return { type: NodeTypes.Array, subType: parseArray(t) }
+  if (t.isUnionType()) return { type: NodeTypes.Union, subTypes: parseUnion(t) }
+  if (t.isUndefinedType()) return { type: NodeTypes.Base, value: 'undefined' }
+  if (t.isNullType()) return { type: NodeTypes.Base, value: 'null' }
+  if (t.getText() === 'any') return { type: NodeTypes.Base, value: 'any' }
   if (t.isIntersectionType()) {
     const subTypes = t.getIntersectionTypes()
-    if (subTypes.every(subType => subType.isObjectType())) {
+    if (subTypes.every(isObject)) {
       const subObjects = subTypes.map(obj => parseObject(obj))
       const subKeys = subObjects.reduce<{ [key: string]: ParsedObjectKey }>(
         (acc, subObject) => {
-          subObject.keys.forEach(k => {
-            acc[k.key] = k
-          })
+          subObject.keys.forEach(k => (acc[k.key] = k))
           return acc
         },
         {},
@@ -156,14 +148,8 @@ export const parseType = (t: Type): ParsedType => {
       subTypes: subTypes.map(parseType),
     }
   }
-  if (t.isUndefinedType()) {
-    return { type: NodeTypes.Base, value: 'undefined' }
-  }
-  if (t.isNullType()) {
-    return { type: NodeTypes.Base, value: 'null' }
-  }
-  if (t.getText() === 'any') {
-    return { type: NodeTypes.Base, value: 'any' }
-  }
+  const def = t.getDefault()
+  if (def !== undefined) return parseType(def)
+  if (isObject(t)) return parseObject(t)
   throw new Error(`Unrecognized type: ${t.getText()}`)
 }
