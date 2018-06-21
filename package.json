@@ -29,9 +29,11 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.tsx?$": "ts-jest",
-      "^.+\\.jsx?$": "ts-jest"
+      "^.+\\.tsx?$": "ts-jest"
     },
+    "modulePathIgnorePatterns": [
+      "/dist"
+    ],
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "moduleFileExtensions": [
       "ts",
