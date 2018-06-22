@@ -75,6 +75,25 @@ describe('object', () => {
       ),
     ).toMatchSnapshot()
   })
+  it('should parse generic/mapped type', () => {
+    expect(
+      parseType(
+        T(`Partial<{
+      hello: string
+      goodbye: number
+    }>`),
+      ),
+    ).toMatchSnapshot()
+    expect(
+      parseType(
+        T(`Pick<{
+      hello: string
+      goodbye: number
+    },
+    "hello">`),
+      ),
+    ).toMatchSnapshot()
+  })
 })
 
 test('array', () => {

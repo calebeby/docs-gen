@@ -142,6 +142,46 @@ Object {
 }
 `;
 
+exports[`object should parse generic/mapped type 1`] = `
+Object {
+  "keys": Array [
+    Object {
+      "key": "hello",
+      "optional": true,
+      "value": Object {
+        "type": 1,
+        "value": "string",
+      },
+    },
+    Object {
+      "key": "goodbye",
+      "optional": true,
+      "value": Object {
+        "type": 1,
+        "value": "number",
+      },
+    },
+  ],
+  "type": 4,
+}
+`;
+
+exports[`object should parse generic/mapped type 2`] = `
+Object {
+  "keys": Array [
+    Object {
+      "key": "hello",
+      "optional": false,
+      "value": Object {
+        "type": 1,
+        "value": "string",
+      },
+    },
+  ],
+  "type": 4,
+}
+`;
+
 exports[`object should parse number index type 1`] = `
 Object {
   "keys": Array [

@@ -1,4 +1,4 @@
-import { Type, SymbolFlags, SyntaxKind, Symbol, ts } from 'ts-simple-ast'
+import { Type, SymbolFlags, Symbol, ts } from './ts-simple-ast-extended'
 
 export enum NodeTypes {
   Literal = 0,
@@ -9,7 +9,23 @@ export enum NodeTypes {
   Intersection = 7,
 }
 
+interface FullSymbol extends ts.Symbol {
+  type?: ts.Type
+}
+
 const parseKeyVal = (prop: Symbol) => {
+  const valueDeclaration = prop.getValueDeclaration()
+  let value
+  if (valueDeclaration !== undefined) {
+    value = parseType(valueDeclaration.getType())
+  } else {
+    const { type } = prop.compilerSymbol as FullSymbol
+    if (type) {
+      value = parseType(new Type(undefined, type))
+    } else {
+      value = parseType(prop.getDeclaredType())
+    }
+  }
   const parsed: {
     key: string
     optional: boolean
@@ -18,12 +34,14 @@ const parseKeyVal = (prop: Symbol) => {
   } = {
     key: prop.getName(),
     optional: prop.hasFlags(SymbolFlags.Optional),
-    value: parseType(prop.getValueDeclaration().getType()),
+    value: value,
   }
   const declaration = prop.getDeclarations()[0]
-  const commentRange = declaration.getLeadingCommentRanges()
-  if (commentRange.length > 0) {
-    parsed.comment = commentRange[0].getText().trim()
+  if (declaration) {
+    const commentRange = declaration.getLeadingCommentRanges()
+    if (commentRange.length > 0) {
+      parsed.comment = commentRange[0].getText().trim()
+    }
   }
   return parsed
 }
