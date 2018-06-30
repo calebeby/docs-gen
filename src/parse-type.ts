@@ -130,23 +130,23 @@ export type ParsedType =
   | ParsedIntersection
 
 const isObject = (t: Type<ts.Type>): boolean => {
-  if (t.isArrayType()) return false
-  if (t.isObjectType()) return true
+  if (t.isArray()) return false
+  if (t.isObject()) return true
   const def = t.getDefault()
   return def ? isObject(def) : false
 }
 
 export const parseType = (t: Type): ParsedType => {
-  if (t.isLiteralType()) return { type: NodeTypes.Literal, value: t.getText() }
-  if (t.isStringType()) return { type: NodeTypes.Base, value: 'string' }
-  if (t.isNumberType()) return { type: NodeTypes.Base, value: 'number' }
-  if (t.isBooleanType()) return { type: NodeTypes.Base, value: 'boolean' }
-  if (t.isArrayType()) return { type: NodeTypes.Array, subType: parseArray(t) }
-  if (t.isUnionType()) return { type: NodeTypes.Union, subTypes: parseUnion(t) }
-  if (t.isUndefinedType()) return { type: NodeTypes.Base, value: 'undefined' }
-  if (t.isNullType()) return { type: NodeTypes.Base, value: 'null' }
+  if (t.isLiteral()) return { type: NodeTypes.Literal, value: t.getText() }
+  if (t.isString()) return { type: NodeTypes.Base, value: 'string' }
+  if (t.isNumber()) return { type: NodeTypes.Base, value: 'number' }
+  if (t.isBoolean()) return { type: NodeTypes.Base, value: 'boolean' }
+  if (t.isArray()) return { type: NodeTypes.Array, subType: parseArray(t) }
+  if (t.isUnion()) return { type: NodeTypes.Union, subTypes: parseUnion(t) }
+  if (t.isUndefined()) return { type: NodeTypes.Base, value: 'undefined' }
+  if (t.isNull()) return { type: NodeTypes.Base, value: 'null' }
   if (t.getText() === 'any') return { type: NodeTypes.Base, value: 'any' }
-  if (t.isIntersectionType()) {
+  if (t.isIntersection()) {
     const subTypes = t.getIntersectionTypes()
     if (subTypes.every(isObject)) {
       const subObjects = subTypes.map(obj => parseObject(obj))
