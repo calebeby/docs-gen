@@ -8,7 +8,7 @@
   "dependencies": {
     "chokidar": "2.0.4",
     "pkg-dir": "3.0.0",
-    "ts-jest": "23.10.2",
+    "ts-jest": "23.10.3",
     "ts-simple-ast": "14.4.5",
     "typescript": "3.1.1"
   },
@@ -49,8 +49,8 @@
     "@babel/plugin-transform-modules-commonjs": "7.1.0",
     "@babel/plugin-transform-typescript": "7.1.0",
     "@types/chokidar": "1.7.5",
-    "@types/jest": "23.3.2",
-    "@types/node": "10.11.3",
+    "@types/jest": "23.3.3",
+    "@types/node": "10.11.4",
     "jest": "23.6.0",
     "prettier": "1.14.3"
   }
