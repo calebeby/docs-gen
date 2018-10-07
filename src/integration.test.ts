@@ -53,6 +53,22 @@ export const submitReport = (report: Report) =>
     \`events/\${eventKey}/matches/\${eventKey}_\${matchKey}/reports\`,
     report
   )
+
+interface Roles {
+  isAdmin: boolean
+  isVerified: boolean
+}
+
+interface EditableUser {
+  username: string
+  firstName: string
+  lastName: string
+  password: string
+  roles: Roles
+}
+
+export const modifyUser = (userId: number, user: Partial<EditableUser>) =>
+  patchRequest<null>(\`/users/\${userId}\`, user)
 `
   expect(run(input)).toMatchSnapshot()
 })

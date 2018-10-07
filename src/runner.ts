@@ -1,4 +1,4 @@
-import Project, { Type } from 'ts-simple-ast'
+import Project, { Type, Node } from 'ts-simple-ast'
 import { findRoutes, parseRoute, Route } from './docgen'
 import { format } from './format'
 import { printType } from './print-type'
@@ -9,10 +9,10 @@ interface RouteCollection {
   routes: Route[]
 }
 
-const printFormatType = (t: Type) =>
+const printFormatType = (n: Node) =>
   `
 \`\`\`ts
-${format(printType(parseType(t)))}\`\`\`
+${format(printType(parseType(n.getType(), n)))}\`\`\`
 `
 
 const printRoute = (route: Route) => {
@@ -22,15 +22,15 @@ const printRoute = (route: Route) => {
   if (route.comment) {
     text += '\n' + route.comment + '\n'
   }
-  if (route.requestType) {
+  if (route.requestNode) {
     text += `
 ### Request
-${printFormatType(route.requestType)}\n`
+${printFormatType(route.requestNode)}\n`
   }
-  if (route.responseType) {
+  if (route.responseNode) {
     text += `
 ### Response
-${printFormatType(route.responseType)}`
+${printFormatType(route.responseNode)}`
   }
   return text
 }

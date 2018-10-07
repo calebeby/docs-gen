@@ -57,5 +57,31 @@ type Data = {
   }
 }[]
 \`\`\`
+
+# \`/users/{userId}\`
+
+## \`PATCH\`
+
+### Request
+
+\`\`\`ts
+type Data = {
+  username?: string
+  firstName?: string
+  lastName?: string
+  password?: string
+  roles?: {
+    isAdmin: boolean
+    isVerified: boolean
+  }
+}
+\`\`\`
+
+
+### Response
+
+\`\`\`ts
+type Data = null
+\`\`\`
 "
 `;

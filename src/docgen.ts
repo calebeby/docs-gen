@@ -24,8 +24,8 @@ const acceptedMethods = [
 
 export interface Route {
   url: string
-  requestType?: Type
-  responseType?: Type
+  requestNode?: Node
+  responseNode?: Node
   method: HTTPMethod
   comment?: string
 }
@@ -72,8 +72,8 @@ export const parseRoute = (call: CallExpression): Route | undefined => {
   const args = call.getArguments() as (Node<ts.Node> | undefined)[]
   const responseArg = typeArgs[0]
   const requestArg = args[1]
-  const responseType = responseArg && responseArg.getType()
-  const requestType = requestArg && requestArg.getType()
+  const responseNode = responseArg
+  const requestNode = requestArg
   const url = call
     .getArguments()[0]
     .getText()
@@ -105,5 +105,5 @@ export const parseRoute = (call: CallExpression): Route | undefined => {
       .filter(s => s !== '')
       .join('\n')
   }
-  return { responseType, requestType, method, url, comment }
+  return { responseNode, requestNode, method, url, comment }
 }

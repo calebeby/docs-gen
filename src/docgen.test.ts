@@ -34,7 +34,7 @@ get<Foo>(\`/blah/\${asdf}\`)
     SyntaxKind.CallExpression,
   )[0]
   const parsedRoute = parseRoute(call)
-  expect(parsedRoute.responseType.getText()).toMatchSnapshot()
+  expect(parsedRoute.responseNode.getType().getText()).toMatchSnapshot()
   expect(parsedRoute.method).toMatchSnapshot()
   expect(parsedRoute.url).toMatchSnapshot()
 })
@@ -45,8 +45,8 @@ test('parseRoute put', () => {
     SyntaxKind.CallExpression,
   )[0]
   const parsedRoute = parseRoute(call)
-  expect(parsedRoute.responseType.getText()).toMatchSnapshot()
-  expect(parsedRoute.requestType.getText()).toMatchSnapshot()
+  expect(parsedRoute.responseNode.getType().getText()).toMatchSnapshot()
+  expect(parsedRoute.requestNode.getType().getText()).toMatchSnapshot()
   expect(parsedRoute.method).toMatchSnapshot()
   expect(parsedRoute.url).toMatchSnapshot()
 })
@@ -57,7 +57,7 @@ test('parseRoute deleteRequest', () => {
     SyntaxKind.CallExpression,
   )[0]
   const parsedRoute = parseRoute(call)
-  expect(parsedRoute.responseType.getText()).toMatchSnapshot()
+  expect(parsedRoute.responseNode.getType().getText()).toMatchSnapshot()
   expect(parsedRoute.method).toMatchSnapshot()
   expect(parsedRoute.url).toMatchSnapshot()
 })
