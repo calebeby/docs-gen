@@ -9,8 +9,8 @@
     "chokidar": "2.0.4",
     "pkg-dir": "3.0.0",
     "ts-jest": "23.10.3",
-    "ts-simple-ast": "14.4.5",
-    "typescript": "3.1.1"
+    "ts-simple-ast": "16.0.2",
+    "typescript": "3.0.3"
   },
   "prettier": {
     "singleQuote": true,
@@ -18,14 +18,17 @@
     "trailingComma": "all"
   },
   "files": [
-    "./cli.js",
-    "./dist"
+    "cli.js",
+    "dist"
   ],
   "scripts": {
     "start": "tsc --watch",
     "build": "tsc",
     "test": "jest",
-    "prepublishOnly": "yarn build"
+    "test:watch": "jest --watch",
+    "check-lint": "eslint --ext .js,.ts . && prettier --list-different --ignore-path .gitignore '**/*.{j,t}s'",
+    "lint": "eslint --ext .js,.ts --fix . && prettier --write --ignore-path .gitignore '**/*.{j,t}s'",
+    "prepublishOnly": "npm run lint && npm run test && npm run build"
   },
   "jest": {
     "transform": {
@@ -34,6 +37,11 @@
     "modulePathIgnorePatterns": [
       "/dist"
     ],
+    "globals": {
+      "ts-jest": {
+        "isolatedModules": true
+      }
+    },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "moduleFileExtensions": [
       "ts",
@@ -51,7 +59,16 @@
     "@types/chokidar": "1.7.5",
     "@types/jest": "23.3.3",
     "@types/node": "10.11.4",
+    "@types/prettier": "1.13.2",
+    "eslint": "5.6.1",
+    "eslint-plugin-caleb": "1.8.0",
     "jest": "23.6.0",
     "prettier": "1.14.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:caleb/recommended",
+      "plugin:caleb/jest"
+    ]
   }
 }

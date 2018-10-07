@@ -1,45 +1,46 @@
 import { parseSource } from './test-helper'
-import { SyntaxKind } from 'ts-simple-ast'
+import Project, { SyntaxKind } from 'ts-simple-ast'
 import { parseType } from './parse-type'
 
-const T = (s: string) =>
-  parseSource(`type Foo = ${s}`)
-    .getDescendantsOfKind(SyntaxKind.TypeAliasDeclaration)[0]
-    .getType()
+const parseTypeFromString = (s: string) => {
+  const declaration = parseSource(`type Foo = ${s}`).getDescendantsOfKind(
+    SyntaxKind.TypeAliasDeclaration,
+  )[0]
+  return parseType(declaration.getType(), declaration)
+}
 
 test('string literal', () => {
-  expect(parseType(T("'hello'"))).toMatchSnapshot()
+  expect(parseTypeFromString("'hello'")).toMatchSnapshot()
 })
 test('string', () => {
-  expect(parseType(T('string'))).toMatchSnapshot()
+  expect(parseTypeFromString('string')).toMatchSnapshot()
 })
 test('number literal', () => {
-  expect(parseType(T('4'))).toMatchSnapshot()
+  expect(parseTypeFromString('4')).toMatchSnapshot()
 })
 test('number', () => {
-  expect(parseType(T('number'))).toMatchSnapshot()
+  expect(parseTypeFromString('number')).toMatchSnapshot()
 })
 test('any', () => {
-  expect(parseType(T('any'))).toMatchSnapshot()
+  expect(parseTypeFromString('any')).toMatchSnapshot()
 })
 test('null', () => {
-  expect(parseType(T('null'))).toMatchSnapshot()
+  expect(parseTypeFromString('null')).toMatchSnapshot()
 })
 test('undefined', () => {
-  expect(parseType(T('undefined'))).toMatchSnapshot()
+  expect(parseTypeFromString('undefined')).toMatchSnapshot()
 })
 test('boolean literal', () => {
-  expect(parseType(T('true'))).toMatchSnapshot()
+  expect(parseTypeFromString('true')).toMatchSnapshot()
 })
 test('boolean', () => {
-  expect(parseType(T('boolean'))).toMatchSnapshot()
+  expect(parseTypeFromString('boolean')).toMatchSnapshot()
 })
 
 describe('object', () => {
   it('should parse correctly with comments', () => {
     expect(
-      parseType(
-        T(`{
+      parseTypeFromString(`{
         foo: number
         /* bar is
         a really
@@ -50,68 +51,58 @@ describe('object', () => {
         // UTC
         date: string
       }`),
-      ),
     ).toMatchSnapshot()
   })
   it('should parse string index type', () => {
     expect(
-      parseType(
-        T(`{
+      parseTypeFromString(`{
           [key: string]: number
           foo: number
           bar: string
         }`),
-      ),
     ).toMatchSnapshot()
   })
   it('should parse number index type', () => {
     expect(
-      parseType(
-        T(`{
+      parseTypeFromString(`{
           [key: number]: number
           foo: number
           bar: string
         }`),
-      ),
     ).toMatchSnapshot()
   })
   it('should parse generic/mapped type', () => {
     expect(
-      parseType(
-        T(`Partial<{
+      parseTypeFromString(`Partial<{
       hello: string
       goodbye: number
     }>`),
-      ),
     ).toMatchSnapshot()
     expect(
-      parseType(
-        T(`Pick<{
+      parseTypeFromString(`Pick<{
       hello: string
       goodbye: number
     },
     "hello">`),
-      ),
     ).toMatchSnapshot()
   })
 })
 
 test('array', () => {
-  expect(parseType(T(`number[]`))).toMatchSnapshot()
+  expect(parseTypeFromString(`number[]`)).toMatchSnapshot()
 })
 describe('union', () => {
   it('should parse a basic union', () => {
-    expect(parseType(T(`(number|'hello')[]`))).toMatchSnapshot()
+    expect(parseTypeFromString(`(number|'hello')[]`)).toMatchSnapshot()
   })
   it('should parse a union with a boolean', () => {
-    expect(parseType(T(`(number|boolean)[]`))).toMatchSnapshot()
+    expect(parseTypeFromString(`(number|boolean)[]`)).toMatchSnapshot()
   })
 })
 describe('intersection', () => {
   test('object', () => {
     expect(
-      parseType(
-        T(`
+      parseTypeFromString(`
 {
   [key: number]: string
   foo: string
@@ -122,10 +113,81 @@ describe('intersection', () => {
   bar?: number
   [key: number]: number
 }`),
-      ),
     ).toMatchSnapshot()
   })
   test('primitive', () => {
-    expect(parseType(T(`number & 'hello'`))).toMatchSnapshot()
+    expect(parseTypeFromString(`number & 'hello'`)).toMatchSnapshot()
   })
+})
+
+test('broken thing', () => {
+  expect(
+    parseTypeFromString(`
+Partial<{
+  username: string
+  firstName: string
+  lastName: string
+  roles: Roles
+}>
+interface Roles {
+  isAdmin: boolean
+  isVerified: boolean
+}
+`),
+  ).toMatchInlineSnapshot(`
+Object {
+  "keys": Array [
+    Object {
+      "key": "username",
+      "optional": true,
+      "value": Object {
+        "type": 1,
+        "value": "string",
+      },
+    },
+    Object {
+      "key": "firstName",
+      "optional": true,
+      "value": Object {
+        "type": 1,
+        "value": "string",
+      },
+    },
+    Object {
+      "key": "lastName",
+      "optional": true,
+      "value": Object {
+        "type": 1,
+        "value": "string",
+      },
+    },
+    Object {
+      "key": "roles",
+      "optional": true,
+      "value": Object {
+        "keys": Array [
+          Object {
+            "key": "isAdmin",
+            "optional": false,
+            "value": Object {
+              "type": 1,
+              "value": "boolean",
+            },
+          },
+          Object {
+            "key": "isVerified",
+            "optional": false,
+            "value": Object {
+              "type": 1,
+              "value": "boolean",
+            },
+          },
+        ],
+        "type": 4,
+      },
+    },
+  ],
+  "type": 4,
+}
+`)
 })

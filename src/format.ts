@@ -1,6 +1,6 @@
-import prettier from 'prettier'
+import prettier, { Options } from 'prettier'
 
-const options = {
+const options: Options = {
   semi: false,
   parser: 'typescript',
 }
