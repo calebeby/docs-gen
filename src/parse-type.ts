@@ -1,4 +1,4 @@
-import { Type, SymbolFlags, Symbol, ts } from './ts-simple-ast-extended'
+import { Type, SymbolFlags, Symbol, ts, Node } from './ts-simple-ast-extended'
 
 export enum NodeTypes {
   Literal = 0,
@@ -16,15 +16,15 @@ interface FullSymbol extends ts.Symbol {
 const parseKeyVal = (prop: Symbol) => {
   const valueDeclaration = prop.getValueDeclaration()
   let value
-  if (valueDeclaration !== undefined) {
-    value = parseType(valueDeclaration.getType())
-  } else {
+  if (valueDeclaration === undefined) {
     const { type } = prop.compilerSymbol as FullSymbol
     if (type) {
       value = parseType(new Type(undefined, type))
     } else {
       value = parseType(prop.getDeclaredType())
     }
+  } else {
+    value = parseType(valueDeclaration.getType())
   }
   const parsed: {
     key: string
@@ -34,7 +34,7 @@ const parseKeyVal = (prop: Symbol) => {
   } = {
     key: prop.getName(),
     optional: prop.hasFlags(SymbolFlags.Optional),
-    value: value,
+    value,
   }
   const declaration = prop.getDeclarations()[0]
   if (declaration) {
@@ -62,7 +62,7 @@ const parseObject = (t: Type) => {
   return obj
 }
 
-const parseArray = (t: Type) => parseType(t.getArrayType())
+const parseArray = (t: Type) => parseType(t.getArrayType() as Type<ts.Type>)
 
 interface ParsedTrue extends ParsedLiteral {
   value: 'true'
@@ -97,6 +97,13 @@ interface ParsedBaseType {
   type: NodeTypes.Base
   value: 'string' | 'number' | 'boolean' | 'any' | 'null' | 'undefined'
 }
+export type ParsedType =
+  | ParsedLiteral
+  | ParsedBaseType
+  | ParsedArray
+  | ParsedUnion
+  | ParsedObject
+  | ParsedIntersection
 interface ParsedArray {
   type: NodeTypes.Array
   subType: ParsedType
@@ -121,13 +128,6 @@ interface ParsedIntersection {
   type: NodeTypes.Intersection
   subTypes: ParsedType[]
 }
-export type ParsedType =
-  | ParsedLiteral
-  | ParsedBaseType
-  | ParsedArray
-  | ParsedUnion
-  | ParsedObject
-  | ParsedIntersection
 
 const isObject = (t: Type<ts.Type>): boolean => {
   if (t.isArray()) return false
