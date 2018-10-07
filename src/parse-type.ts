@@ -9,10 +9,6 @@ export enum NodeTypes {
   Intersection = 7,
 }
 
-interface FullSymbol extends ts.Symbol {
-  type?: ts.Type
-}
-
 const parseKeyVal = (prop: Symbol, node?: Node) => {
   const valueDeclaration = prop.getValueDeclaration()
   let value: ParsedType
