@@ -16,9 +16,7 @@ ${format(printType(parseType(n.getType(), n)))}\`\`\`
 `
 
 const printRoute = (route: Route) => {
-  let text = `
-## \`${route.method.toUpperCase()}\`
-`
+  let text = `\n## \`${route.method.toUpperCase()}\`\n`
   if (route.comment) {
     text += '\n' + route.comment + '\n'
   }
@@ -39,6 +37,9 @@ const printRouteCollection = (routeCollection: RouteCollection) =>
   `# \`${routeCollection.url}\`
 ${routeCollection.routes.map(printRoute).join('\n')}`
 
+const printIndexEntry = (routeCollection: RouteCollection) =>
+  `- [\`${routeCollection.url}\`](#${routeCollection.url})`
+
 const mergeUrls = (routes: RouteCollection[] = [], currentRoute: Route) => {
   const matchingValue = routes.find(u => u.url === currentRoute.url)
   if (matchingValue === undefined) {
@@ -52,11 +53,21 @@ const mergeUrls = (routes: RouteCollection[] = [], currentRoute: Route) => {
 export const run = (input: string) => {
   const project = new Project()
   const file = project.createSourceFile('file.ts', input)
-  return findRoutes(file)
+
+  const routeCollections = findRoutes(file)
     .map(parseRoute)
     .filter((r): r is Route => r !== undefined)
     .reduce<RouteCollection[]>(mergeUrls, [])
+
+  const index = routeCollections
+    .map(printIndexEntry)
+    .sort()
+    .join('\n')
+
+  const body = routeCollections
     .map(printRouteCollection)
     .sort()
     .join('\n')
+
+  return '# Index' + '\n\n' + index + '\n\n' + body
 }
