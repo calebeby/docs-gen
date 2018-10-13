@@ -9,7 +9,7 @@
     "chokidar": "2.0.4",
     "pkg-dir": "3.0.0",
     "ts-jest": "23.10.3",
-    "ts-simple-ast": "16.0.2",
+    "ts-simple-ast": "17.0.0",
     "typescript": "3.0.3"
   },
   "prettier": {
