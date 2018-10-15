@@ -36,7 +36,7 @@ ${printFormatType(route.responseNode)}`
 }
 
 const printRouteCollection = (routeCollection: RouteCollection) =>
-  `# \`${routeCollection.url}\`
+  `# \`/${routeCollection.url}\`
 ${routeCollection.routes.map(printRoute).join('\n')}`
 
 const mergeUrls = (routes: RouteCollection[] = [], currentRoute: Route) => {
