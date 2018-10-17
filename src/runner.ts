@@ -38,7 +38,7 @@ const printRouteCollection = (routeCollection: RouteCollection) =>
 ${routeCollection.routes.map(printRoute).join('\n')}`
 
 const printIndexEntry = (routeCollection: RouteCollection) => {
-  const headerID = routeCollection.url.replace(/{|}|\//g, '').toLowerCase()
+  const headerID = routeCollection.url.replace(/[{}/]/g, '').toLowerCase()
   return `- [\`${routeCollection.url}\`](#${headerID})`
 }
 
