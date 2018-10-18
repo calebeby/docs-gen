@@ -39,7 +39,7 @@ ${routeCollection.routes.map(printRoute).join('\n')}`
 
 const printIndexEntry = (routeCollection: RouteCollection) => {
   const headerID = routeCollection.url.replace(/[{}/]/g, '').toLowerCase()
-  return `- [\`${routeCollection.url}\`](#${headerID})`
+  return `- [\`/${routeCollection.url}\`](#${headerID})`
 }
 
 const mergeUrls = (routes: RouteCollection[] = [], currentRoute: Route) => {
