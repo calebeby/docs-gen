@@ -23,7 +23,7 @@ interface BasicEventInfo {
  * this is a comment on getEvents
  */
 // another comment
-export const getEvents = () => get<BasicEventInfo[]>('/events')
+export const getEvents = () => get<BasicEventInfo[]>('events')
 
 interface EventInfo extends BasicEventInfo {
   webcasts: {
@@ -38,7 +38,7 @@ interface EventInfo extends BasicEventInfo {
 }
 
 export const getEventInfo = (eventKey: string) =>
-  get<EventInfo>(\`/event/\${eventKey}/info\`)
+  get<EventInfo>(\`event/\${eventKey}/info\`)
 
 interface Report {
   team: string
@@ -68,7 +68,7 @@ interface EditableUser {
 }
 
 export const modifyUser = (userId: number, user: Partial<EditableUser>) =>
-  patchRequest<null>(\`/users/\${userId}\`, user)
+  patchRequest<null>(\`users/\${userId}\`, user)
 `
   expect(run(input)).toMatchSnapshot()
 })

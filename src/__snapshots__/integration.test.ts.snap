@@ -1,7 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`type 1`] = `
-"# \`/event/{eventKey}/info\`
+"# Index
+
+- [\`/event/{eventKey}/info\`](#eventeventkeyinfo)
+- [\`/events\`](#events)
+- [\`/users/{userId}\`](#usersuserid)
+
+# \`/event/{eventKey}/info\`
 
 ## \`GET\`
 
