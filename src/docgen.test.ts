@@ -40,7 +40,7 @@ get<Foo>(\`/blah/\${asdf}\`)
 })
 
 test('parseRoute put', () => {
-  const src = 'put<Foo>(`/blah/${asdf}`, {name: "hello"})'
+  const src = 'put<Foo>(`/blah/${asdf}`, {name: "hello"})' // eslint-disable-line no-template-curly-in-string
   const call = parseSource(src).getDescendantsOfKind(
     SyntaxKind.CallExpression,
   )[0]
@@ -52,7 +52,7 @@ test('parseRoute put', () => {
 })
 
 test('parseRoute deleteRequest', () => {
-  const src = 'deleteRequest<boolean>(`/blah/${asdf}`)'
+  const src = 'deleteRequest<boolean>(`/blah/${asdf}`)' // eslint-disable-line no-template-curly-in-string
   const call = parseSource(src).getDescendantsOfKind(
     SyntaxKind.CallExpression,
   )[0]

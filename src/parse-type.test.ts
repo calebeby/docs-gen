@@ -1,5 +1,5 @@
 import { parseSource } from './test-helper'
-import Project, { SyntaxKind } from 'ts-simple-ast'
+import { SyntaxKind } from 'ts-simple-ast'
 import { parseType } from './parse-type'
 
 const parseTypeFromString = (s: string) => {

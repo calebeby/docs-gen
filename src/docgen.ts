@@ -2,7 +2,6 @@ import {
   SourceFile,
   SyntaxKind,
   CallExpression,
-  Type,
   ts,
   Node,
   TypeNode,

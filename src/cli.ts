@@ -8,7 +8,6 @@ import {
 } from 'fs'
 import { promisify } from 'util'
 import { run } from './runner'
-// import { watch } from 'chokidar'
 
 const readFile = promisify(_readFile)
 const writeFile = promisify(_writeFile)
@@ -23,7 +22,6 @@ const main = async () => {
     )
   }
   const srcPath = path.join(root, 'src', 'api.ts')
-  // const watcher = watch(srcPath)
   const processFile = async () => {
     const docsFolder = path.join(root, 'docs')
     if (!(await exists(docsFolder))) {
@@ -34,14 +32,13 @@ const main = async () => {
     try {
       out = run(src)
       await writeFile(path.join(docsFolder, 'docs.md'), out)
-    } catch (e) {
-      throw e
+    } catch (error) {
+      throw error
       // console.error(e)
     }
     console.log('done')
   }
   processFile()
-  // watcher.on('change', processFile)
 }
 
 main()

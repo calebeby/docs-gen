@@ -1,4 +1,4 @@
-import Project, { Type, Node } from 'ts-simple-ast'
+import Project, { Node } from 'ts-simple-ast'
 import { findRoutes, parseRoute, Route } from './docgen'
 import { format } from './format'
 import { printType } from './print-type'
@@ -71,5 +71,5 @@ export const run = (input: string) => {
     .sort()
     .join('\n')
 
-  return '# Index' + '\n\n' + index + '\n\n' + body
+  return '# Index\n\n' + index + '\n\n' + body
 }
