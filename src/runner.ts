@@ -1,4 +1,4 @@
-import Project, { Node } from 'ts-simple-ast'
+import Project, { Node, CallExpression } from 'ts-simple-ast'
 import { findRoutes, parseRoute, Route } from './docgen'
 import { format } from './format'
 import { printType } from './print-type'
@@ -52,11 +52,8 @@ const mergeUrls = (routes: RouteCollection[] = [], currentRoute: Route) => {
   return routes
 }
 
-export const run = (input: string) => {
-  const project = new Project()
-  const file = project.createSourceFile('file.ts', input)
-
-  const routeCollections = findRoutes(file)
+export const printDocs = (input: CallExpression[]) => {
+  const routeCollections = input
     .map(parseRoute)
     .filter((r): r is Route => r !== undefined)
     .reduce<RouteCollection[]>(mergeUrls, [])
@@ -72,4 +69,10 @@ export const run = (input: string) => {
     .join('\n')
 
   return '# Index\n\n' + index + '\n\n' + body
+}
+
+export const run = (input: string) => {
+  const project = new Project()
+  const file = project.createSourceFile('file.ts', input)
+  return printDocs(findRoutes(file))
 }

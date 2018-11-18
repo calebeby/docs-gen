@@ -1,15 +1,11 @@
 import pkgUp from 'pkg-dir'
 import * as path from 'path'
-import {
-  readFile as _readFile,
-  writeFile as _writeFile,
-  exists as _exists,
-  mkdir as _mkdir,
-} from 'fs'
+import { writeFile as _writeFile, exists as _exists, mkdir as _mkdir } from 'fs'
 import { promisify } from 'util'
-import { run } from './runner'
+import Project from 'ts-simple-ast'
+import { findRoutes } from './docgen'
+import { printDocs } from './runner'
 
-const readFile = promisify(_readFile)
 const writeFile = promisify(_writeFile)
 const exists = promisify(_exists)
 const mkdir = promisify(_mkdir)
@@ -21,24 +17,19 @@ const main = async () => {
       'Cannot find root directory. Please include a package.json in the root directory',
     )
   }
-  const srcPath = path.join(root, 'src', 'api.ts')
-  const processFile = async () => {
-    const docsFolder = path.join(root, 'docs')
-    if (!(await exists(docsFolder))) {
-      await mkdir(docsFolder)
-    }
-    const src = await readFile(srcPath, 'utf-8')
-    let out
-    try {
-      out = run(src)
-      await writeFile(path.join(docsFolder, 'docs.md'), out)
-    } catch (error) {
-      throw error
-      // console.error(e)
-    }
-    console.log('done')
+  const srcDir = path.join(root, 'src', 'api')
+  const project = new Project()
+  project.addExistingSourceFiles(`${srcDir}/**/*.ts{,x}`)
+  const files = project.getSourceFiles()
+  const routes = files.flatMap(f => findRoutes(f))
+
+  const docs = printDocs(routes)
+
+  const docsFolder = path.join(root, 'docs')
+  if (!(await exists(docsFolder))) {
+    await mkdir(docsFolder)
   }
-  processFile()
+  writeFile(path.join(docsFolder, 'docs.md'), docs)
 }
 
 main()

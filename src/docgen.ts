@@ -7,19 +7,7 @@ import {
   TypeNode,
 } from 'ts-simple-ast'
 
-type HTTPMethod = 'get' | 'put' | 'post' | 'delete' | 'patch'
-const acceptedMethods = [
-  'get',
-  'put',
-  'post',
-  'delete',
-  'patch',
-  'getRequest',
-  'putRequest',
-  'postRequest',
-  'deleteRequest',
-  'patchRequest',
-]
+type HTTPMethod = 'GET' | 'PUT' | 'POST' | 'DELETE' | 'PATCH'
 
 export interface Route {
   url: string
@@ -29,11 +17,17 @@ export interface Route {
   comment?: string
 }
 
-export const isCallHttpMethod = (call: CallExpression) =>
-  call.getTypeArguments().length === 1 &&
-  call
-    .getChildrenOfKind(SyntaxKind.Identifier)
-    .some(id => acceptedMethods.includes(id.getText()))
+export const isCallHttpMethod = (call: CallExpression) => {
+  const args = call.getArguments()
+  return (
+    args.length >= 2 &&
+    call
+      .getChildrenOfKind(SyntaxKind.Identifier)
+      .some(id => id.getText() === 'request') &&
+    args[0].getType().isStringLiteral() &&
+    (args[1].getType().isString() || args[1].getType().isStringLiteral())
+  )
+}
 
 /*
  * Given a source file, find all exported arrow functions that include a call to get() put() or post()
@@ -55,30 +49,26 @@ export const findRoutes = (file: SourceFile) =>
       return routes
     }, [])
 
-const isHttpMethod = (s: string): s is HTTPMethod => acceptedMethods.includes(s)
+const removeQuotes = (s: string) =>
+  s.replace(/^['`"]/, '').replace(/['`"]$/, '')
 
 export const parseRoute = (call: CallExpression): Route | undefined => {
-  const method = call
-    .getChildrenOfKind(SyntaxKind.Identifier)
-    .map(id => id.getText().replace('Request', ''))
-    .find(id => acceptedMethods.includes(id))
-  if (method === undefined || !isHttpMethod(method)) {
-    return
-  }
+  const method = removeQuotes(call.getArguments()[0].getText()) as HTTPMethod
   const typeArgs = call.getTypeArguments() as (
     | TypeNode<ts.TypeNode>
     | undefined)[]
   const args = call.getArguments() as (Node<ts.Node> | undefined)[]
-  const responseArg = typeArgs[0]
-  const requestArg = args[1]
-  const responseNode = responseArg
-  const requestNode = requestArg
-  const url = call
-    .getArguments()[0]
-    .getText()
-    .replace(/`/g, '')
-    .replace(/'/g, '')
-    .replace(/\${/g, '{')
+  const postProcessArg = args[2]
+  const responseNode =
+    typeArgs[0] ||
+    (postProcessArg &&
+      postProcessArg.getFirstDescendantByKindOrThrow(SyntaxKind.Parameter))
+
+  const requestNode = args[3]
+  const url = removeQuotes(call.getArguments()[1].getText()).replace(
+    /\${/g,
+    '{',
+  )
   let comment = ''
   const parentExport = call.getFirstAncestorByKind(SyntaxKind.VariableStatement)
   if (parentExport) {

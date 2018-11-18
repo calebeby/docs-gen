@@ -4,6 +4,7 @@ exports[`type 1`] = `
 "# Index
 
 - [\`/event/{eventKey}/info\`](#eventeventkeyinfo)
+- [\`/events/{eventKey}/matches/{eventKey}_{matchKey}/reports\`](#eventseventkeymatcheseventkey_matchkeyreports)
 - [\`/events\`](#events)
 - [\`/users/{userId}\`](#usersuserid)
 
@@ -33,6 +34,35 @@ type Data = {
   endDate: string
   // Only if user is logged in
   starred?: boolean
+}
+\`\`\`
+
+# \`/events/{eventKey}/matches/{eventKey}_{matchKey}/reports\`
+
+## \`PUT\`
+
+### Request
+
+\`\`\`ts
+type Data = {
+  team: string
+  stats: {
+    [key: string]: any
+  }
+  notes: {
+    [key: string]: string
+  }
+  eventKey: string
+  matchKey: string
+}
+\`\`\`
+
+
+### Response
+
+\`\`\`ts
+type Data = {
+  report: string
 }
 \`\`\`
 
