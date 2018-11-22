@@ -38,7 +38,7 @@ interface EventInfo extends BasicEventInfo {
 }
 
 export const getEventInfo = (eventKey: string) =>
-  request<EventInfo>('GET', \`event/\${eventKey}/info\`)
+  request('GET', \`event/\${eventKey}/info\`, (d: EventInfo) => d)
 
 interface Report {
   team: string
@@ -52,8 +52,8 @@ export const submitReport = (report: Report) =>
   request(
     'PUT',
     \`events/\${eventKey}/matches/\${eventKey}_\${matchKey}/reports\`,
+    report,
     (d: {report: string}) => d
-    report
   )
 
 interface Roles {
@@ -70,7 +70,7 @@ interface EditableUser {
 }
 
 export const modifyUser = (userId: number, user: Partial<EditableUser>) =>
-  request('PATCH', \`users/\${userId}\`, (d: null) => d, user)
+  request('PATCH', \`users/\${userId}\`, user, (d: null) => d)
 `
   expect(run(input)).toMatchSnapshot()
 })

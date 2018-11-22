@@ -41,23 +41,6 @@ type Data = {
 
 ## \`PUT\`
 
-### Request
-
-\`\`\`ts
-type Data = {
-  team: string
-  stats: {
-    [key: string]: any
-  }
-  notes: {
-    [key: string]: string
-  }
-  eventKey: string
-  matchKey: string
-}
-\`\`\`
-
-
 ### Response
 
 \`\`\`ts
@@ -97,22 +80,6 @@ type Data = {
 # \`/users/{userId}\`
 
 ## \`PATCH\`
-
-### Request
-
-\`\`\`ts
-type Data = {
-  username?: string
-  firstName?: string
-  lastName?: string
-  password?: string
-  roles?: {
-    isAdmin: boolean
-    isVerified: boolean
-  }
-}
-\`\`\`
-
 
 ### Response
 

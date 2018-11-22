@@ -56,7 +56,7 @@ request<{name: string}>('GET', \`/blah/\${asdf}\`)
 
 test('parseRoute put', () => {
   const src =
-    'request("PUT", `/blah/${asdf}`, (d: {age: number}) => d, {name: "hello"})' // eslint-disable-line no-template-curly-in-string
+    'request("PUT", `/blah/${asdf}`, {name: "hello"}, (d: {age: number}) => d)' // eslint-disable-line no-template-curly-in-string
   const call = parseSource(src).getDescendantsOfKind(
     SyntaxKind.CallExpression,
   )[0]
@@ -71,7 +71,7 @@ test('parseRoute put', () => {
   expect(parsedRoute.url).toMatchInlineSnapshot(`"/blah/{asdf}"`)
 })
 
-test('parseRoute deleteRequest', () => {
+test('parseRoute delete', () => {
   const src = 'request<boolean>("DELETE", `/blah/${asdf}`)' // eslint-disable-line no-template-curly-in-string
   const call = parseSource(src).getDescendantsOfKind(
     SyntaxKind.CallExpression,

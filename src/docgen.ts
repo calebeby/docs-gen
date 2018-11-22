@@ -58,13 +58,14 @@ export const parseRoute = (call: CallExpression): Route | undefined => {
     | TypeNode<ts.TypeNode>
     | undefined)[]
   const args = call.getArguments() as (Node<ts.Node> | undefined)[]
-  const postProcessArg = args[2]
+  const postProcessArg = args[3] || args[2]
   const responseNode =
     typeArgs[0] ||
     (postProcessArg &&
       postProcessArg.getFirstDescendantByKindOrThrow(SyntaxKind.Parameter))
 
-  const requestNode = args[3]
+  // if it has a req type param, it doesn't have a postprocess
+  const requestNode = typeArgs[0] ? args[2] : undefined
   const url = removeQuotes(call.getArguments()[1].getText()).replace(
     /\${/g,
     '{',
