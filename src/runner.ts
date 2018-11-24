@@ -16,13 +16,24 @@ ${format(printType(parseType(n.getType(), n)))}\`\`\`
 `
 
 const printRoute = (route: Route) => {
+  const queryParamsNode = route.queryParamsNode
+  const queryParams = queryParamsNode
+    ? queryParamsNode
+        .getType()
+        .getProperties()
+        .map(queryParam => {
+          const t = queryParam.getTypeAtLocation(queryParamsNode)
+          return `${queryParam.getName()}=${printType(parseType(t))}`
+        })
+        .join('&')
+    : ''
   let text = `\n## \`${route.method.toUpperCase()}\`\n`
   if (route.comment) {
     text += '\n' + route.comment + '\n'
   }
   if (route.requestNode) {
     text += `
-### Request
+### Request${queryParams && ' - `?' + queryParams + '`'}
 ${printFormatType(route.requestNode)}\n`
   }
   if (route.responseNode) {

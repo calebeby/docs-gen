@@ -98,7 +98,7 @@ type Data = {
 
 ## \`PATCH\`
 
-### Request
+### Request - \`?queryParam=number&filter=string\`
 
 \`\`\`ts
 type Data = {

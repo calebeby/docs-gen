@@ -56,11 +56,14 @@ request<{name: string}>('GET', \`/blah/\${asdf}\`)
 
 test('parseRoute put', () => {
   const src =
-    'request("PUT", `/blah/${asdf}`, {name: "hello"}, (d: {age: number}) => d)' // eslint-disable-line no-template-curly-in-string
+    'request<{age: number}>("PUT", `/blah/${asdf}`, {filter: number}, {name: "hello"})' // eslint-disable-line no-template-curly-in-string
   const call = parseSource(src).getDescendantsOfKind(
     SyntaxKind.CallExpression,
   )[0]
   const parsedRoute = parseRoute(call)
+  expect(parsedRoute.queryParamsNode.getType().getText()).toMatchInlineSnapshot(
+    `"{ filter: any; }"`,
+  )
   expect(parsedRoute.responseNode.getType().getText()).toMatchInlineSnapshot(
     `"{ age: number; }"`,
   )

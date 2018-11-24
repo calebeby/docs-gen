@@ -13,6 +13,7 @@ export interface Route {
   url: string
   requestNode?: Node
   responseNode?: Node
+  queryParamsNode?: Node
   method: HTTPMethod
   comment?: string
 }
@@ -58,14 +59,9 @@ export const parseRoute = (call: CallExpression): Route | undefined => {
     | TypeNode<ts.TypeNode>
     | undefined)[]
   const args = call.getArguments() as (Node<ts.Node> | undefined)[]
-  const postProcessArg = args[3] || args[2]
-  const responseNode =
-    typeArgs[0] ||
-    (postProcessArg &&
-      postProcessArg.getFirstDescendantByKindOrThrow(SyntaxKind.Parameter))
-
-  // if it has a res type param, it doesn't have a postprocess
-  const requestNode = args.length === 4 || typeArgs[0] ? args[2] : undefined
+  const responseNode = typeArgs[0]
+  const queryParamsNode = args[2]
+  const requestNode = args[3]
   const url = removeQuotes(call.getArguments()[1].getText()).replace(
     /\${/g,
     '{',
@@ -95,5 +91,5 @@ export const parseRoute = (call: CallExpression): Route | undefined => {
       .filter(s => s !== '')
       .join('\n')
   }
-  return { responseNode, requestNode, method, url, comment }
+  return { responseNode, requestNode, queryParamsNode, method, url, comment }
 }
