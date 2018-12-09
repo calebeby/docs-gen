@@ -8,8 +8,8 @@
   "dependencies": {
     "chokidar": "2.0.4",
     "pkg-dir": "3.0.0",
-    "ts-simple-ast": "19.0.0",
-    "typescript": "3.1.6"
+    "ts-simple-ast": "20.0.0",
+    "typescript": "3.2.2"
   },
   "prettier": {
     "singleQuote": true,
@@ -47,19 +47,19 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.1.6",
-    "@babel/plugin-transform-modules-commonjs": "7.1.0",
-    "@babel/plugin-transform-typescript": "7.1.0",
+    "@babel/core": "7.2.0",
+    "@babel/plugin-transform-modules-commonjs": "7.2.0",
+    "@babel/plugin-transform-typescript": "7.2.0",
     "@types/chokidar": "1.7.5",
-    "@types/jest": "23.3.9",
-    "@types/node": "10.12.10",
-    "@types/prettier": "1.15.1",
+    "@types/jest": "23.3.10",
+    "@types/node": "10.12.12",
+    "@types/prettier": "1.15.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "23.6.0",
-    "eslint": "5.9.0",
+    "eslint": "5.10.0",
     "eslint-plugin-caleb": "1.13.0",
     "jest": "23.6.0",
-    "prettier": "1.15.2"
+    "prettier": "1.15.3"
   },
   "eslintConfig": {
     "extends": [

@@ -18,8 +18,9 @@ const main = async () => {
     )
   }
   const srcDir = path.join(root, 'src', 'api')
-  const project = new Project()
+  const project = new Project({ tsConfigFilePath: 'tsconfig.json' })
   project.addExistingSourceFiles(`${srcDir}/**/*.ts{,x}`)
+  project.resolveSourceFileDependencies()
   const files = project.getSourceFiles()
   const routes = files.flatMap(f => findRoutes(f))
 

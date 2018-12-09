@@ -9,19 +9,9 @@ export enum NodeTypes {
   Intersection = 7,
 }
 
-const parseKeyVal = (prop: Symbol, node?: Node) => {
-  const valueDeclaration = prop.getValueDeclaration()
-  let value: ParsedType
-  if (valueDeclaration === undefined) {
-    if (!node) {
-      throw new Error(
-        'Cannot get type of mapped type key without type declaration node',
-      )
-    }
-    value = parseType(prop.getTypeAtLocation(node), node)
-  } else {
-    value = parseType(valueDeclaration.getType(), node)
-  }
+const parseKeyVal = (prop: Symbol, node: Node) => {
+  const value = parseType(prop.getTypeAtLocation(node), node)
+  const optional = prop.hasFlags(SymbolFlags.Optional)
   const parsed: {
     key: string
     optional: boolean
@@ -29,8 +19,18 @@ const parseKeyVal = (prop: Symbol, node?: Node) => {
     comment?: string
   } = {
     key: prop.getName(),
-    optional: prop.hasFlags(SymbolFlags.Optional),
-    value,
+    optional,
+    value:
+      optional && value.type === NodeTypes.Union
+        ? {
+            ...value,
+            // if it is optional exclude undefined from the type
+            subTypes: value.subTypes.filter(
+              sub =>
+                !(sub.type === NodeTypes.Base && sub.value === 'undefined'),
+            ),
+          }
+        : value,
   }
   const declaration = prop.getDeclarations()[0]
   if (declaration) {
@@ -42,7 +42,7 @@ const parseKeyVal = (prop: Symbol, node?: Node) => {
   return parsed
 }
 
-const parseObject = (t: Type, node?: Node) => {
+const parseObject = (t: Type, node: Node) => {
   const obj: ParsedObject = {
     type: NodeTypes.Object,
     keys: t.getProperties().map(p => parseKeyVal(p, node)),
@@ -58,7 +58,7 @@ const parseObject = (t: Type, node?: Node) => {
   return obj
 }
 
-const parseArray = (t: Type, node?: Node) =>
+const parseArray = (t: Type, node: Node) =>
   parseType(t.getArrayType() as Type<ts.Type>, node)
 
 interface ParsedTrue extends ParsedLiteral {
@@ -76,7 +76,7 @@ const isTrueType = (t: ParsedType): t is ParsedTrue =>
 const isFalseType = (t: ParsedType): t is ParsedFalse =>
   isTypeLiteral(t) && t.value === 'false'
 
-const parseUnion = (t: Type, node?: Node) => {
+const parseUnion = (t: Type, node: Node) => {
   const types = t.getUnionTypes().map(t => parseType(t, node))
   if (types.find(isTrueType) && types.find(isFalseType)) {
     return types
@@ -133,37 +133,45 @@ const isObject = (t: Type<ts.Type>): boolean => {
   return def ? isObject(def) : false
 }
 
-export const parseType = (t: Type, node?: Node): ParsedType => {
+const parseIntersection = (t: Type, node: Node): ParsedType => {
+  const subTypes = t.getIntersectionTypes()
+  if (subTypes.every(isObject)) {
+    const subObjects = subTypes.map(obj => parseObject(obj, node))
+    const subKeys = subObjects.reduce<{ [key: string]: ParsedObjectKey }>(
+      (acc, subObject) => {
+        subObject.keys.forEach(k => (acc[k.key] = k))
+        return acc
+      },
+      {},
+    )
+    return Object.assign({}, ...subObjects, {
+      keys: Object.entries(subKeys).map(([, key]) => key),
+    })
+  }
+  return {
+    type: NodeTypes.Intersection,
+    subTypes: subTypes.map(t => parseType(t, node)),
+  }
+}
+
+export const parseType = (t: Type, node: Node): ParsedType => {
+  if (node === undefined) {
+    throw new Error('its bad' + t.getText())
+  }
+  // console.log(t.getText(), node.getText())
   if (t.isLiteral()) return { type: NodeTypes.Literal, value: t.getText() }
   if (t.isString()) return { type: NodeTypes.Base, value: 'string' }
   if (t.isNumber()) return { type: NodeTypes.Base, value: 'number' }
   if (t.isBoolean()) return { type: NodeTypes.Base, value: 'boolean' }
-  if (t.isArray()) return { type: NodeTypes.Array, subType: parseArray(t) }
+  if (t.isArray())
+    return { type: NodeTypes.Array, subType: parseArray(t, node) }
   if (t.isUnion())
     return { type: NodeTypes.Union, subTypes: parseUnion(t, node) }
   if (t.isUndefined()) return { type: NodeTypes.Base, value: 'undefined' }
   if (t.isNull()) return { type: NodeTypes.Base, value: 'null' }
   if (t.getText() === 'any') return { type: NodeTypes.Base, value: 'any' }
-  if (t.isIntersection()) {
-    const subTypes = t.getIntersectionTypes()
-    if (subTypes.every(isObject)) {
-      const subObjects = subTypes.map(obj => parseObject(obj, node))
-      const subKeys = subObjects.reduce<{ [key: string]: ParsedObjectKey }>(
-        (acc, subObject) => {
-          subObject.keys.forEach(k => (acc[k.key] = k))
-          return acc
-        },
-        {},
-      )
-      return Object.assign({}, ...subObjects, {
-        keys: Object.entries(subKeys).map(([, key]) => key),
-      })
-    }
-    return {
-      type: NodeTypes.Intersection,
-      subTypes: subTypes.map(t => parseType(t, node)),
-    }
-  }
+  if (t.isIntersection()) return parseIntersection(t, node)
   if (isObject(t)) return parseObject(t, node)
+
   throw new Error(`Unrecognized type: ${t.getText()}`)
 }

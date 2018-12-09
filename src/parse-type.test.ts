@@ -120,7 +120,7 @@ describe('intersection', () => {
   })
 })
 
-test('broken thing', () => {
+test('type alias with parameter', () => {
   expect(
     parseTypeFromString(`
 Partial<{
@@ -180,6 +180,41 @@ Object {
             "value": Object {
               "type": 1,
               "value": "boolean",
+            },
+          },
+        ],
+        "type": 4,
+      },
+    },
+  ],
+  "type": 4,
+}
+`)
+})
+
+test('type param used in nested', () => {
+  const parsed = parseSource(`
+  type NestedTypeAlias<T> = { data:T }
+  type Foo = NestedTypeAlias<{name: string}>
+  `)
+  const declaration = parsed.getDescendantsOfKind(
+    SyntaxKind.TypeAliasDeclaration,
+  )[1]
+  const output = parseType(declaration.getType(), declaration)
+  expect(output).toMatchInlineSnapshot(`
+Object {
+  "keys": Array [
+    Object {
+      "key": "data",
+      "optional": false,
+      "value": Object {
+        "keys": Array [
+          Object {
+            "key": "name",
+            "optional": false,
+            "value": Object {
+              "type": 1,
+              "value": "string",
             },
           },
         ],

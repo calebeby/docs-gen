@@ -23,7 +23,9 @@ const printRoute = (route: Route) => {
         .getProperties()
         .map(queryParam => {
           const t = queryParam.getTypeAtLocation(queryParamsNode)
-          return `${queryParam.getName()}=${printType(parseType(t))}`
+          return `${queryParam.getName()}=${printType(
+            parseType(t, queryParamsNode),
+          )}`
         })
         .join('&')
     : ''
