@@ -6,10 +6,10 @@
     "pgrn-doc": "./cli.js"
   },
   "dependencies": {
-    "chokidar": "2.0.4",
+    "chokidar": "2.1.8",
     "pkg-dir": "3.0.0",
     "ts-simple-ast": "20.0.0",
-    "typescript": "3.2.2"
+    "typescript": "3.9.10"
   },
   "prettier": {
     "singleQuote": true,
@@ -47,19 +47,19 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.2.0",
-    "@babel/plugin-transform-modules-commonjs": "7.2.0",
-    "@babel/plugin-transform-typescript": "7.2.0",
+    "@babel/core": "7.18.5",
+    "@babel/plugin-transform-modules-commonjs": "7.18.2",
+    "@babel/plugin-transform-typescript": "7.18.4",
     "@types/chokidar": "1.7.5",
-    "@types/jest": "23.3.10",
-    "@types/node": "10.12.12",
-    "@types/prettier": "1.15.2",
+    "@types/jest": "23.3.14",
+    "@types/node": "10.17.60",
+    "@types/prettier": "1.19.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "23.6.0",
-    "eslint": "5.10.0",
-    "eslint-plugin-caleb": "1.13.0",
+    "eslint": "5.16.0",
+    "eslint-plugin-caleb": "1.16.0",
     "jest": "23.6.0",
-    "prettier": "1.15.3"
+    "prettier": "1.19.1"
   },
   "eslintConfig": {
     "extends": [
